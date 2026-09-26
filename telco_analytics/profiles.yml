@@ -1,0 +1,6 @@
+telco_analytics:
+  outputs:
+    dev:
+      type: duckdb
+      path: telco.duckdb
+  target: dev
