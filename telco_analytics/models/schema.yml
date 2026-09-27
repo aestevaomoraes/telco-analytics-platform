@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_telemetry
+    description: "Camada staging com padronização de telemetria bruta e flag de violação de SLA."
+    columns:
+      - name: router_id
+        description: "Identificador do nó de rede."
+        tests:
+          - not_null
+      - name: is_sla_breached
+        description: "Flag indicando violação contratual de SLA."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['true', 'false']
+
+  - name: agg_router_health
+    description: "Data mart executivo com a taxa de violação (health) por nó de rede."
+    columns:
+      - name: router_id
+        description: "Chave primária do roteador/nó de rede."
+        tests:
+          - unique
+          - not_null
