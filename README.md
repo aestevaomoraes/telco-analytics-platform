@@ -41,7 +41,7 @@ A plataforma apoia-se em três pilares metodológicos internacionais:
 
 ## 3. Estrutura da Trilha e Roteiro de Entregas
 
-``` mermaid
+```mermaid
 graph TD
     A[Fontes Brutas & Telemetria Telco] --> B[Ciclo 1: Engenharia Analítica Local]
     B -->|DuckDB + dbt Core| C[Ciclo 2: Cloud DW & FinOps]
@@ -63,4 +63,32 @@ graph TD
     subgraph Ciclo_4 [Ciclo 4: Consumo por IA]
         E1[MetricFlow Semantic Layer] --- E2[Modelos Preditivos In-Database]
     end
+```
 
+## 4. Estado Atual da Implementação (Ciclo 1: Fundação Local)
+
+* [x] **Ingestão Sintética:** Gerador vetorial via DuckDB (`generate_telemetry.py`) produzindo 10.000 registros de telemetria em formato colunar Parquet (`raw_telemetry.parquet`).
+* [x] **Exploração & Rastreabilidade:** Validação interativa via Jupyter Notebook (`exploracao_telemetria.ipynb`) documentando as etapas de dados brutos e materializações.
+* [x] **Camada Staging:** Modelo `stg_telemetry` implementado com padronização de nomenclatura, casting e flag idempotente de violação de SLA (`is_sla_breached`).
+* [x] **Data Marts:** Agregação executiva `agg_router_health` compilada via DAG usando `{{ ref() }}`, expondo taxa de violação por nó de rede.
+* [ ] **Governança & Testes:** Implementação de testes de contrato e regras de schema (`schema.yml`) — *Em andamento*.
+
+---
+
+## 5. Como Reproduzir o Ambiente Local
+
+Para executar o pipeline analítico localmente no ambiente DuckDB:
+
+1. **Instale as dependências:**
+    pip install dbt-duckdb
+
+2. **Gere os dados brutos de telemetria:**
+    python telco_analytics/generate_telemetry.py
+
+3. **Compile e execute os modelos dbt:**
+    cd telco_analytics
+    dbt run --profiles-dir .
+
+---
+
+Observe que logo abaixo de `end` estão as três crases sozinhas na linha: elas fecham a caixa escura do diagrama[cite: 8]. Depois disso, basta alternar para **Preview** para verificar o layout limpo e clicar em **Commit changes...**.
