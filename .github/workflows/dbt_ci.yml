@@ -1,0 +1,26 @@
+name: dbt Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dbt-governance-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 1. Checkout do código-fonte
+        uses: actions/checkout@v4
+
+      - name: 2. Setup do ambiente Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: 3. Instalar dbt Core e adaptador DuckDB
+        run: pip install dbt-duckdb
+
+      - name: 4. Executar Data Contracts (SLA de Rede)
+        run: dbt test
+        working-directory: ./telco_analytics
