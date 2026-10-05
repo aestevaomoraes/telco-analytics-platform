@@ -2,14 +2,14 @@ version: 2
 
 models:
   - name: stg_telemetry
-    description: "Camada staging com padronização de telemetria bruta e flag de violação de SLA."
+    description: "Camada Staging com padronizacao 1:1 da telemetria bruta de rede e flag booleana de violacao de SLA."
     columns:
       - name: router_id
-        description: "Identificador do nó de rede."
+        description: "Identificador univoco do no de rede/roteador corporativo."
         tests:
           - not_null
       - name: is_sla_breached
-        description: "Flag indicando violação contratual de SLA."
+        description: "Flag binaria indicando se os parametros de latencia e perda violaram o contrato de SLA."
         tests:
           - not_null
           - accepted_values:
@@ -17,10 +17,18 @@ models:
                 values: ['true', 'false']
 
   - name: agg_router_health
-    description: "Data mart executivo com a taxa de violação (health) por nó de rede."
+    description: "Data Mart executivo consolidado com volume total de eventos e taxa percentual de saude operacional por no de rede."
     columns:
       - name: router_id
-        description: "Chave primária do roteador/nó de rede."
+        description: "Chave primaria do Data Mart agregada por no de rede."
         tests:
           - unique
+          - not_null
+      - name: total_events
+        description: "Volume total de eventos de telemetria processados para o roteador."
+        tests:
+          - not_null
+      - name: sla_breach_rate_pct
+        description: "Taxa percentual de violacoes de SLA calculada sobre o total de telemetrias."
+        tests:
           - not_null
